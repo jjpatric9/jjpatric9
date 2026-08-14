@@ -27,20 +27,35 @@ Console does ask for:
 | Support email | Per app | Yes | Public on the listing. |
 | **Privacy policy URL** | Per app | **Yes, for Boxstack** | See below. |
 
-### The privacy policy is the one that blocks you
+### The privacy policy
 
-`docs/SHIP-DESIGN.md:486` already called this: the AdMob SDK collects data on a third party's
-behalf, so the listing cannot publish without a live policy URL. Requirements Google enforces:
+Every app on Play needs one, even an app that collects nothing.
+
+`docs/SHIP-DESIGN.md:486` framed this as an ads problem — but **BoxStacker v1 has no ads and
+collects nothing at all.** Verified against the source: the manifest declares *no Android
+permissions whatsoever*, including no `INTERNET`, and the only dependencies are AndroidX
+(Compose, activity, core, datastore, lifecycle). There is no AdMob, no billing, no Firebase and
+no analytics. `AdPolicy` is pure cadence arithmetic with no SDK behind it yet.
+
+That is a strong position, and it is worth stating plainly on the listing:
+
+- The Data safety form is a clean **No data collected / No data shared**, which earns the
+  *No data shared with third parties* badge.
+- The claim "cannot send data anywhere" is **structural, not a promise** — there is no network
+  permission to abuse. Very few games can say that truthfully.
+
+**This becomes false the moment AdMob is added.** The policy and the Data safety form both have
+to be rewritten before that build is submitted. Requirements Google enforces:
 
 - **Publicly reachable** — no login, no interstitial, no `noindex` gate.
 - **Stable** — the same URL for the life of the app. Not a Google Doc link, not a Notion page
   you might reorganise, not a URL with a session token in it.
 - **App-specific** — it must name Boxstack and describe what Boxstack does, not be a generic
   template about a company.
-- **Covers the ad SDK** — what AdMob collects, that it is used for advertising, how the
-  consent mechanism (UMP) works, and how to change that choice.
 - **Matches the Data safety form** — a mismatch between the form and the policy is a common
   rejection, and it is the kind that costs a review round trip.
+- **Covers the ad SDK, once there is one** — what AdMob collects, that it is used for
+  advertising, how the consent mechanism (UMP) works, and how to change that choice.
 
 GitHub Pages is an acceptable host. A repo serving `https://<user>.github.io/boxstack/privacy`
 satisfies every bullet above and costs nothing.
@@ -96,24 +111,24 @@ That paragraph is more persuasive than any badge, and every clause is true.
 One screenshot or a short GIF of Boxstack running outperforms the entire rest of the page. A
 games developer whose page contains no game footage is the single most common own-goal here.
 
-### Pin real repositories
+### Repositories, and what your evidence actually is
 
-Pinned repos are the most-looked-at part of a profile. Which leads to the biggest issue with
-the current account:
+Pinned repos are the most-looked-at part of a profile — for a developer building peer
+credibility or job-hunting. **That is not this situation**, and the distinction matters:
 
-> **You have 0 public repositories.** A profile that describes a game, links to it, and the
-> link 404s for everyone but you is worse than no profile at all — it reads as a claim that
-> cannot be checked. This is the highest-leverage single change available.
+> For a Play Store application, **the live listing is the evidence**, not a source repo.
+> Essentially no commercial game ships its source. A studio profile that links to a store page
+> and a working site, with no public source, is entirely ordinary and implies nothing.
 
-Options, in descending order of value:
+**Closed-source is the default, not a hedge.** Declining to publish source is a normal business
+decision that says nothing about how something was built. It is not the same act as publishing
+a doctored history, and should not feel like one.
 
-1. **Make Boxstack public.** The repo is genuinely good work: an architecture doc that explains
-   the reasoning, a rewritten-four-times balance model with the failures documented, a soak
-   suite. It is evidence. Being public does not affect your Play listing or your ability to
-   sell the app.
-2. **Publish the site repo only.** If the source stays closed, at least the Pages site is a
-   real public repo with real commits.
-3. **A public repo extracted from the project** — the `core` module alone, say.
+So the public-presence need is met by the **site repo** — genuinely public, genuinely active,
+and it does the whole job of "this account is real." Boxstack itself stays private.
+
+The one thing to avoid: **never link to a private repo from a public page.** It 404s for every
+visitor, which is worse than not linking at all. Check every link while signed out.
 
 ### Contact that matches
 
@@ -191,13 +206,48 @@ One name, one email, one site, everywhere:
 
 ---
 
-## 7. Order of work
+## 7. Decisions taken
 
-1. Privacy policy page live at a stable URL. **Blocks the listing.**
-2. Support page — an email address and what to expect. Cheap, and Play asks for a destination.
-3. Play Console fields filled and consistent.
-4. Boxstack made public, or a public repo published.
-5. Profile README rewritten.
-6. Pinned repos set, screenshot added.
+| Question | Decision |
+|---|---|
+| Front-facing identity | **TallmanGames**, with Joshua Patrick named behind it |
+| Where the page lives | Profile README + GitHub Pages site |
+| Boxstack repo | **Stays private** — normal for a commercial game |
+| AI tooling | Stated as method, not confession: *"I build with AI tooling"* |
+| Play account | **Personal + virtual mailbox address** |
+| Store name | **BoxStacker** (matches `applicationId = com.boxstacker.app`) |
 
-Steps 1–3 are the release. Steps 4–6 are the credibility.
+### The address decision, and its one open question
+
+A **personal** Play account publishes the developer's address on every listing, worldwide, and
+Play listing data is widely scraped and mirrored. A virtual mailbox (UPS Store, Anytime Mailbox,
+iPostal1 — all operate in Canada) gives a street-format address for roughly $15–30 CAD/month. A
+bare Canada Post PO Box is usually rejected; Google wants street format.
+
+**Confirm before paying for a mailbox:** Google's verification may require the account address
+to correspond to your government ID, which a virtual mailbox would not satisfy. That requirement
+has changed several times since 2023. Start the sign-up, reach the verification step, and read
+what it actually asks for before committing money.
+
+If it turns out the address must match your ID, the fallback is an **organisation** account —
+free D-U-N-S number, ~1–2 weeks, publishes a business address instead, and makes the developer
+name legitimately *TallmanGames*.
+
+### Naming inconsistency to reconcile
+
+The store name is **BoxStacker** and `applicationId` is `com.boxstacker.app`, but the repo,
+`CLAUDE.md` and every doc say **Boxstack**. The site and profile use *BoxStacker* throughout.
+Worth eventually settling on one name in the project docs too.
+
+---
+
+## 8. Order of work
+
+1. **Get a gameplay GIF off a real device.** Highest-value missing asset, and only you can make it.
+2. Publish the site — `index.html`, `privacy.html`, `support.html` live at a stable URL.
+3. Start Play Console sign-up; check what the verification step demands before buying a mailbox.
+4. Sort the address, then complete account verification.
+5. Data safety form — declare **No data collected**, and check it against `privacy.html` line by line.
+6. Profile README: drop in the GIF and the store link once both exist.
+
+Steps 2–5 are the release. Steps 1 and 6 are the credibility.
