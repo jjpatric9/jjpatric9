@@ -16,7 +16,7 @@ sideways and drop it. Complete a row and it sets, becoming the tower's new found
 crates you're dealt rarely let you finish a row cleanly, and every hole and overhang pushes the
 tower further off centre. Lean too far and the whole thing goes over.
 
-<!-- SCREENSHOT: replace with a GIF of one placement and a topple -->
+<img src="https://jjpatric9.github.io/boxstacker.gif" width="240" alt="BoxStacker gameplay: a crate is carried sideways by the crane and dropped onto a tower, completing a row that sets into a solid band across the board.">
 
 **Android · Kotlin · Jetpack Compose**
 
